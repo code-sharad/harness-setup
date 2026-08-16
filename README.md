@@ -20,6 +20,36 @@ A personal collection of agent skills (Claude Code / pi-Coding-Agent compatible)
 | `grill-me` | Interactive interrogation / feedback agent |
 | `teach` | Formats and workflow for teaching missions |
 
+## Theme
+
+The `themes/` folder holds my custom pi-coding-agent theme(s), applied via
+`settings.json` (`"theme": "rose-pine-moon"`).
+
+- `themes/rose-pine-moon.json` — Rose Pine Moon palette for pi.
+
+## Extensions (install from name)
+
+The pi *extension packages* I have installed are listed in `~/.pi/agent/settings.json`
+under `packages`. Install them again with `pi install <package>`:
+
+| Package | Type |
+|---------|------|
+| `npm:pi-clinepass-provider` | npm |
+| `npm:@vigolium/piolium` | npm |
+| `npm:pi-subagents` | npm |
+| `npm:pi-mcp-adapter` | npm |
+| `npm:pi-effort` | npm |
+| `npm:@pi-archimedes/todo` | npm |
+| `git:github.com/nagisanzenin/engram` | git |
+
+Additional local extension hook files (kept in `~/.pi/agent/extensions/`) are tracked
+by name only, not by content:
+
+| Name | What it does |
+|------|--------------|
+| `herdr-agent-state` | Herdr ↔ pi integration state hooks (`herdr-agent-state.ts`)
+| `update` | Adds an in-app `/update` command to update pi and its extensions (`update.ts`) |
+
 ## Layout
 
 Each skill lives in its own folder with a `SKILL.md` entry point, plus optional
