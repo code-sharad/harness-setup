@@ -68,14 +68,5 @@ This is a personal config repository.
 
 ## One-shot setup prompt
 
-Paste this into any AI harness to set up your environment:
-
-```
-Set up pi-coding-agent for me. Clone https://github.com/code-sharad/harness-setup
-into ~/.agents/skills. Copy themes/rose-pine-moon.json to ~/.pi/agent/themes/.
-Set settings.json theme=rose-pine-moon and packages to: pi-clinepass-provider,
-@vigolium/piolium, pi-subagents, pi-mcp-adapter, pi-effort, @pi-archimedes/todo,
-engram (git:github.com/nagisanzenin/engram). Run pi install for each. Add a
-minimal /update extension (~/.pi/agent/extensions/update.ts). Verify via pi
-doctor and confirm the theme and all packages are installed. Only touch these.
-```
+Paste the prompt in [`prompts/harness-setup.md`](prompts/harness-setup.md) into any
+AI harness to set up your environment.
