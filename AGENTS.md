@@ -15,3 +15,9 @@ Before any action that depends on current external information—especially CLI 
 For new TypeScript projects, use **Bun** as the standard package manager. Use `bun install`, `bun add`, and `bun run <script>`, and commit the generated Bun lockfile.
 
 If an existing project already uses a different package manager, preserve its established choice: use its lockfile and package-manager metadata (`package-lock.json`, `pnpm-lock.yaml`, `yarn.lock`, or an existing `packageManager` field) rather than introducing Bun or a second lockfile.
+
+
+# global agent instructions
+
+When making technical decisions, do not give much weight to development cost.
+Instead, prefer quality, simplicity, robustness, scalability, and long term maintainability.
