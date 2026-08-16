@@ -1,0 +1,10 @@
+# Ignore local/editor cruft
+.DS_Store
+*.swp
+*~
+.desktop.ini
+
+# Any scratch/secret files
+.env
+.env.*
+!*.example

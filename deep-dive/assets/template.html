@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<!-- ============================================================
+  DEEP-DIVE ENGINE · STARTER SKELETON
+  Replace {{SLOTS}}. Add widget CSS/JS from the references.
+  Rules: vanilla JS · single file · badges on all extensions ·
+  prefers-reduced-motion · localStorage checklist · L5 gate.
+============================================================= -->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{TITLE}} — An Interactive Deep Dive</title>
+<meta name="description" content="{{META_DESCRIPTION}}">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#f6f2ea; --paper-2:#fdfbf6; --ink:#211d16; --ink-soft:#4a443a; --muted:#857c6d;
+  --line:#e3dccc; --line-strong:#cfc5ae; --brand:#c2410c; --brand-soft:#fed7aa; --brand-faint:#fff3e8;
+  --good:#15803d; --good-faint:#f0fdf4; --bad:#b91c1c; --bad-faint:#fef2f2;
+  --code-bg:#26221c; --code-ink:#f3ead9;
+  --cat-a:#b45309; --cat-a-faint:#fef3e2; --cat-b:#6d28d9; --cat-b-faint:#f3effe;
+  --cat-c:#0f766e; --cat-c-faint:#ecfdf9; --cat-d:#be123c; --cat-d-faint:#fff1f2;
+  --radius:14px;
+  --shadow-sm:0 1px 2px rgba(33,29,22,.06),0 2px 8px rgba(33,29,22,.05);
+  --shadow-md:0 2px 6px rgba(33,29,22,.07),0 10px 28px rgba(33,29,22,.09);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--paper);color:var(--ink);font-family:'Inter',system-ui,sans-serif;font-size:17px;line-height:1.72;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+::selection{background:var(--brand-soft)}
+
+/* scroll system */
+#progress{position:fixed;top:0;left:0;height:4px;width:0%;background:linear-gradient(90deg,var(--brand),#ea580c);z-index:1000;border-radius:0 3px 3px 0}
+#dotnav{position:fixed;left:22px;top:50%;transform:translateY(-50%);z-index:900;display:flex;flex-direction:column;gap:14px}
+#dotnav a{display:flex;align-items:center;gap:10px;text-decoration:none}
+#dotnav .dot{width:9px;height:9px;border-radius:50%;background:var(--line-strong);transition:all .25s;flex:none}
+#dotnav .lbl{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);opacity:0;transform:translateX(-6px);transition:all .25s;white-space:nowrap;background:var(--paper-2);padding:2px 8px;border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow-sm)}
+#dotnav a:hover .lbl,#dotnav a.active .lbl{opacity:1;transform:translateX(0)}
+#dotnav a.active .dot{background:var(--brand);transform:scale(1.5);box-shadow:0 0 0 4px var(--brand-faint)}
+#dotnav a.active .lbl{color:var(--brand);border-color:var(--brand-soft)}
+@media(max-width:1240px){#dotnav{display:none}}
+.reveal{opacity:0;transform:translateY(26px);transition:opacity .7s cubic-bezier(.22,.8,.3,1),transform .7s cubic-bezier(.22,.8,.3,1)}
+.reveal.in{opacity:1;transform:none}
+.reveal.d1{transition-delay:.08s}.reveal.d2{transition-delay:.16s}.reveal.d3{transition-delay:.24s}
+@media(prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none}html{scroll-behavior:auto}}
+
+/* layout + prose */
+.wrap{max-width:740px;margin:0 auto;padding:0 24px}
+.wide{max-width:1080px;margin:0 auto;padding:0 24px}
+section{padding:90px 0 40px}
+.sec-num{font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;letter-spacing:.2em;color:var(--brand);text-transform:uppercase;display:flex;align-items:center;gap:12px;margin-bottom:18px}
+.sec-num::after{content:"";flex:1;height:1px;background:var(--line-strong)}
+h2{font-family:'Fraunces',serif;font-size:clamp(30px,4.6vw,44px);font-weight:600;line-height:1.12;letter-spacing:-.015em;margin-bottom:22px}
+h3{font-family:'Fraunces',serif;font-size:24px;font-weight:600;line-height:1.25;margin:40px 0 14px}
+p{margin-bottom:18px;color:var(--ink-soft)}
+p strong,li strong{color:var(--ink)}
+.lede{font-size:20px;line-height:1.65;color:var(--ink);font-weight:500}
+.mono{font-family:'JetBrains Mono',monospace;font-size:.86em;background:var(--paper-2);border:1px solid var(--line);border-radius:6px;padding:1px 6px;white-space:nowrap}
+
+/* callouts */
+.callout{border-radius:var(--radius);padding:22px 24px;margin:30px 0;border:1px solid var(--line);background:var(--paper-2);box-shadow:var(--shadow-sm)}
+.callout .co-tag{font-family:'JetBrains Mono',monospace;font-size:10.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;display:inline-flex;align-items:center;gap:7px;margin-bottom:10px;padding:4px 10px;border-radius:20px}
+.callout p:last-child{margin-bottom:0}
+.co-analogy{background:var(--cat-c-faint)}
+.co-analogy .co-tag{background:#d7efe9;color:var(--cat-c)}
+.co-beyond{background:linear-gradient(135deg,#fff7ed,#fef3e2 60%,#fdf2f8);border:1px solid #f5d0a9;position:relative;overflow:hidden}
+.co-beyond::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--brand),#db2777,#6d28d9)}
+.co-beyond .co-tag{background:var(--ink);color:#ffe8d1}
+.co-warn{background:var(--bad-faint);border-color:#fecaca}
+.co-warn .co-tag{background:#fee2e2;color:var(--bad)}
+.co-good{background:var(--good-faint);border-color:#bbf7d0}
+.co-good .co-tag{background:#dcfce7;color:var(--good)}
+
+/* hero */
+#hero{min-height:92vh;display:flex;flex-direction:column;justify-content:center;position:relative;padding:60px 0 40px}
+#hero .kicker{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.24em;text-transform:uppercase;color:var(--brand);margin-bottom:26px}
+#hero h1{font-family:'Fraunces',serif;font-size:clamp(46px,7.4vw,88px);font-weight:600;line-height:1.02;letter-spacing:-.025em}
+#hero h1 em{font-style:italic;font-weight:400;color:var(--brand)}
+#hero .sub{font-size:clamp(17px,2vw,21px);color:var(--muted);max-width:640px;margin:26px 0 34px;line-height:1.6}
+#hero .sub b{color:var(--ink)}
+.hero-meta{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:44px}
+.hero-meta span{font-family:'JetBrains Mono',monospace;font-size:11px;padding:6px 14px;border-radius:30px;border:1px solid var(--line-strong);color:var(--ink-soft);background:var(--paper-2)}
+.btn{font-size:15px;font-weight:600;padding:13px 26px;border-radius:40px;border:1.5px solid var(--ink);background:var(--ink);color:var(--paper);cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:9px;transition:all .2s;box-shadow:var(--shadow-sm)}
+.btn:hover{transform:translateY(-2px);box-shadow:var(--shadow-md)}
+.btn.ghost{background:transparent;color:var(--ink)}
+.btn.small{padding:9px 18px;font-size:13.5px}
+
+/* widget shell */
+.widget{background:var(--paper-2);border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow-md);margin:44px 0;overflow:hidden}
+.widget .w-head{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:16px 22px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.widget .w-title{font-family:'JetBrains Mono',monospace;font-size:11.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;display:flex;align-items:center;gap:9px}
+.widget .w-title .led{width:8px;height:8px;border-radius:50%;background:var(--good)}
+.widget .w-body{padding:26px 24px}
+.widget .w-foot{padding:14px 22px;border-top:1px dashed var(--line);font-size:13.5px;color:var(--muted);font-style:italic}
+@media(max-width:640px){.widget .w-body{padding:18px 14px}}
+
+/* footer */
+footer{margin-top:100px;border-top:1px solid var(--line-strong);background:var(--paper-2)}
+footer .wide{padding-top:56px;padding-bottom:56px}
+footer h4{font-family:'Fraunces',serif;font-size:26px;margin-bottom:12px}
+footer p,footer li{font-size:14px;color:var(--muted)}
+.foot-links{display:flex;flex-direction:column;gap:9px;font-size:14px}
+.foot-links a{color:var(--ink-soft);text-decoration:none;width:fit-content}
+.foot-links a:hover{color:var(--brand)}
+/* ADD WIDGET CSS HERE — keep tokens, keep single file */
+</style>
+</head>
+<body>
+<div id="progress"></div>
+
+<nav id="dotnav" aria-label="Sections">
+  <a href="#hero" data-sec="hero"><span class="dot"></span><span class="lbl">Start</span></a>
+  <!-- one <a> per section: data-sec must equal section id -->
+</nav>
+
+<header id="hero">
+  <div class="wrap">
+    <div class="kicker">{{KICKER — e.g. "An interactive deep-dive essay"}}</div>
+    <h1>{{TITLE}}<br><em>{{TITLE_ACCENT}}</em></h1>
+    <p class="sub">{{PROMISE — what the learner will understand, concretely}}</p>
+    <div class="hero-meta">
+      <span>{{READ_TIME}}</span><span>{{WIDGET_COUNT}} interactive widgets</span><span>{{AUDIENCE}}</span><span>{{SOURCE_CREDIT}}</span>
+    </div>
+    <div class="hero-cta"><a class="btn" href="#{{FIRST_SECTION}}">Start ↓</a></div>
+  </div>
+</header>
+
+<!-- SECTION PATTERN (copy per skeleton stage; widget div goes in .wide):
+  section#{{ID}}
+    .wrap > .sec-num.reveal + h2.reveal + p.lede.reveal.d1
+    .wide > .widget  (interactive component)
+    .wrap  (follow-up prose, callouts)
+-->
+
+<footer>
+  <div class="wide">
+    <h4>Sources & references</h4>
+    <p>{{PROVENANCE — original content credit; what is faithful vs. badged extension}}</p>
+    <div class="foot-links">
+      <!-- <a href="..." target="_blank" rel="noopener">→ {{SOURCE}}</a> — REQUIRED: original + every research source -->
+    </div>
+  </div>
+</footer>
+
+<script>
+/* scroll system — keep as-is */
+const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { threshold: .12 });
+document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+const secs = [...document.querySelectorAll('section[id], header[id]')];
+const navAs = [...document.querySelectorAll('#dotnav a')];
+window.addEventListener('scroll', () => {
+  const h = document.documentElement;
+  document.getElementById('progress').style.width = (h.scrollTop / (h.scrollHeight - h.clientHeight) * 100) + '%';
+  let cur = secs[0] && secs[0].id;
+  for (const s of secs) if (s.getBoundingClientRect().top < innerHeight * .4) cur = s.id;
+  navAs.forEach(a => a.classList.toggle('active', a.dataset.sec === cur));
+}, { passive: true });
+/* ADD WIDGET JS HERE — IIFE per widget, no globals, no frameworks */
+</script>
+</body>
+</html>
