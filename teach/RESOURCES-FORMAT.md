@@ -13,6 +13,8 @@
   Foundational text on programming and adaptation. Use for: anything to do with periodisation, recovery, intensity zones.
 - [Article: "How Much Should I Train?" — Greg Nuckols (Stronger By Science)](https://example.com)
   Evidence-based review of volume landmarks. Use for: weekly set targets per muscle group.
+- [Blogs]
+- [Documentation]
 
 ## Wisdom (Communities)
 
