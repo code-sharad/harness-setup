@@ -113,9 +113,9 @@ consulting the installed pi typings for the correct ExtensionAPI shape.
 5. VERIFICATION — do all before you say "done"
 =====================================================================
 
-- [ ] List `~/.agents/skills`: all 12 third-party + 3 self-authored skills
-      present (13 unique names — firecrawl family counted as listed in 1A),
-      pre-existing skills still intact.
+- [ ] List `~/.agents/skills`: all 12 third-party skill folders from 1A
+      (including the `grilling` dependency) + the 3 self-authored skills
+      from 1B are present; pre-existing skills still intact.
 - [ ] Each installed skill reports a plausible source/version; third-party
       skills are the latest from their official repos, not repo snapshots.
 - [ ] `rose-pine-moon` theme file exists and settings.json references it.
