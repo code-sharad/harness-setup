@@ -1,102 +1,151 @@
-# pi Coding-Agent — Full Setup Prompt
+# pi Coding-Agent — LLM-Driven Setup Prompt
 
-> Paste everything in the **block below** into any AI harness (Claude Code, pi,
-> OpenAI Codex, ChatGPT, Gemini CLI, etc.). The agent will then recreate this
-> exact environment: skills, theme, extensions, and pi configuration.
+> There is **no setup script** in this repo, by design. Scripts rot (hardcoded
+> commands, package names, and paths go stale). Instead, paste the block below
+> into any capable AI agent (pi, Claude Code, Codex, Gemini CLI, …) on the
+> target machine. The agent reads the *declared end state*, figures out the
+> current correct commands by verifying official documentation, executes,
+> verifies, and reports. The reference repo is:
+> https://github.com/code-sharad/harness-setup (private — use the machine's
+> already-authenticated `gh` / GitHub credentials if asked).
 
 ---
 
 ```
-You are helping me bootstrap a personal ai coding-agent environment ("harness setup")
-for pi-coding-agent (https://github.com/earendil-works/pi-coding-agent).
+You are setting up my personal pi coding-agent environment from scratch.
+Work from the reference repo: https://github.com/code-sharad/harness-setup
+(If it is private, use my already-authenticated `gh` CLI — do not ask me for
+credentials.)
 
-The reference repo is:  https://github.com/code-sharad/harness-setup
-(replaces the old my-skills repo). If it is private, I confirm you may use my
-already-authenticated GitHub/gh credentials.
+This is a DECLARATIVE spec, not a script. For every command you intend to run,
+first verify the current official documentation on the internet (CLI flags,
+package names, install methods, and paths change over time). Do not rely on
+memorized commands. If something you try fails, diagnose and adapt — do not
+give up or silently skip. If a step is impossible without something I must
+provide (an API key, a login), mark it DEGRADED, finish everything else, and
+list it in your final report.
 
-## Goal
-Recreate the following so I have a working pi environment identical to my
-current setup: (1) skills, (2) theme, (3) page extensions.
+Target: pi-coding-agent (https://github.com/earendil-works/pi-coding-agent),
+version currently installed on this machine (verify with `pi --version`).
 
-## 1. Skills
-- Clone the repo into my skills folder:
-    git clone https://github.com/code-sharad/harness-setup.git ~/.agents/skills
-  (If the folder already exists, instead pull the latest and/or merge carefully,
-  keeping my local edits.)
-- Confirm the 14 skill directories are present and verifiably nothing is broken:
-  agent-reach, deep-dive, exa-research, find-skills, firecrawl, firecrawl-crawl,
-  firecrawl-interact, firecrawl-map, firecrawl-scrape, firecrawl-search,
-  frontend-design, grill-me, teach.
-- Each skill is a folder with a SKILL.md entry point (plus optional references/,
-  scripts/, assets/). Do not rename or flatten them.
+=====================================================================
+1. SKILLS — end state: all skills below are installed and discoverable
+=====================================================================
 
-## 2. Theme (rose-pine-moon)
-- Copy the theme into pi's theme directory:
-    mkdir -p ~/.pi/agent/themes
-    cp ~/.agents/skills/themes/rose-pine-moon.json ~/.pi/agent/themes/rose-pine-moon.json
+The agent skills directory for pi is `~/.agents/skills` (each skill is a
+folder containing SKILL.md). Anything already present there (e.g. OS-provided
+skills such as `diagnose-crash`, `omarchy`) MUST be preserved, not deleted.
 
-## 3. Extensions (package installs)
-Run pi's installer for each package listed in settings.json (the "packages" array).
-Equivalent command per package:  pi install <source>
-    npm:pi-clinepass-provider
-    npm:@vigolium/piolium
-    npm:pi-subagents
-    npm:pi-mcp-adapter
-    npm:pi-effort
-    npm:@pi-archimedes/todo
-    git:github.com/nagisanzenin/engram
-- If any package is already installed, skip it (idempotent) rather than erroring.
+A) THIRD-PARTY SKILLS — install the LATEST version of each from its
+   official source. Do NOT copy them out of the reference repo (those are
+   stale snapshots). For each, verify the skill's official source repo on
+   the internet, then install the current version — the open agent-skills
+   CLI (`npx skills`, registry: skills.sh) is the usual installer; verify
+   its current usage before running it.
 
-## 4. Local extension hook files (tracked by NAME only, not content here)
-The following live in ~/.pi/agent/extensions/ and are NOT in the repo by design —
-recreate or confirm them:
-- herdr-agent-state.ts   -> installed/managed by Herdr; do not hand-edit. Leave it.
-- update.ts              -> adds an in-app /update command for pi & extensions.
-  If update.ts is missing, write a minimal pi extension that exposes an "/update"
-  slash command running `pi update` (targets: all/extensions/self). If unsure of
-  the ExtensionAPI shape, consult the installed @earendil-works/pi-coding-agent
-  typings instead of guessing.
+   | Skill            | Official source                                      |
+   |------------------|-------------------------------------------------------|
+   | agent-reach      | github.com/Panniantong/Agent-Reach                    |
+   | find-skills      | github.com/vercel-labs/skills                          |
+   | frontend-design  | github.com/anthropics/skills                          |
+   | grill-me         | github.com/mattpocock/skills                           |
+   | grilling         | github.com/mattpocock/skills (REQUIRED dependency of  |
+   |                  | grill-me — install it too, it is not in my repo)       |
+   | teach            | github.com/mattpocock/skills                          |
+   | firecrawl        | github.com/firecrawl/skills (install the core skills: |
+   |                  | firecrawl, firecrawl-search, firecrawl-scrape,        |
+   |                  | firecrawl-crawl, firecrawl-map, firecrawl-interact)   |
 
-## 5. pi configuration (settings.json)
-Ensure ~/.pi/agent/settings.json references my setup:
-- "theme": "rose-pine-moon"
-- "packages": the extension list above, in the same form they were installed
-- "defaultProvider": "clinepass"
-- "defaultModel": "cline-pass/deepseek-v4-flash"
-- "defaultThinkingLevel": "high"
-Merge these into existing settings; do not delete other keys.
+B) SELF-AUTHORED SKILLS — these exist ONLY in the reference repo. Obtain
+   them from it (clone it to a scratch dir, or fetch via `gh api`) and copy
+   the folders into `~/.agents/skills`:
+   - deep-dive
+   - exa-research
+   - tailor-resume
 
-## 6. Global skills reference
-Optionally place a global AGENTS.md containing:
-  - "Put the ~/.agents/skills folder in your skills search path."
-  - "For any web search / platform lookup task, use the agent-reach skill; for
-    single-URL scraping use firecrawl-scrape; for deep research use exa-research."
+C) Post-conditions: every skill folder above contains a valid SKILL.md with
+   frontmatter; report any skill whose CLI prerequisites are missing (e.g.
+   `firecrawl --status` unauthenticated, `agent-reach` binary absent) as
+   DEGRADED with the exact remediation (which API key / install command).
 
-## 7. Verification (must complete before you say "done")
-- Run: pi (or relogin) and confirm the theme rose-pine-moon is active.
-- Run: pi doctor / pi update --check (or the equivalent) and confirm all 7
-  extension packages show as installed.
-- Run: pi install --list (or equivalent) and print the result so I can eyeball it.
-- Confirm settings.json still loads (no JSON errors).
-- Report exactly which steps you changed vs. skipped, and flag anything that
-  needed credentials you did not have.
+=====================================================================
+2. THEME — end state: rose-pine-moon installed in pi
+=====================================================================
 
-Do not install unrelated tools, modify my other dotfiles, or change provider
-credentials. Keep it scoped to the above.
+- Get `themes/rose-pine-moon.json` from the reference repo and install it
+  into pi's themes directory (verify the correct location for this pi
+  version — historically `~/.pi/agent/themes/`).
+
+=====================================================================
+3. EXTENSIONS — end state: these packages installed via pi
+=====================================================================
+
+Install each via pi's package installer (verify current command form —
+historically `pi install <pkg>`). Idempotent: skip any already installed.
+
+  - npm:pi-clinepass-provider
+  - npm:@vigolium/piolium
+  - npm:pi-subagents
+  - npm:pi-mcp-adapter
+  - npm:pi-effort
+  - npm:@pi-archimedes/todo
+  - git:github.com/nagisanzenin/engram
+
+=====================================================================
+4. CONFIG — end state: ~/.pi/agent/settings.json contains
+=====================================================================
+
+Merge (never delete existing keys) into `~/.pi/agent/settings.json`:
+  - "theme": "rose-pine-moon"
+  - "packages": the extension list above, in the form pi installed them
+  - "defaultProvider": "clinepass"
+  - "defaultModel": "cline-pass/deepseek-v4-flash"
+  - "defaultThinkingLevel": "high"
+Validate the JSON parses before and after.
+
+Local extension hook files live in ~/.pi/agent/extensions/ and are tracked
+by name only: `herdr-agent-state.ts` (managed by Herdr — leave it alone) and
+`update.ts` (adds a `/update` slash command). If `update.ts` is missing,
+write a minimal pi extension exposing `/update` that runs `pi update`,
+consulting the installed pi typings for the correct ExtensionAPI shape.
+
+=====================================================================
+5. VERIFICATION — do all before you say "done"
+=====================================================================
+
+- [ ] List `~/.agents/skills`: all 12 third-party + 3 self-authored skills
+      present (13 unique names — firecrawl family counted as listed in 1A),
+      pre-existing skills still intact.
+- [ ] Each installed skill reports a plausible source/version; third-party
+      skills are the latest from their official repos, not repo snapshots.
+- [ ] `rose-pine-moon` theme file exists and settings.json references it.
+- [ ] All 7 extension packages show as installed (verify via pi's package
+      listing; adapt command if `pi install --list` doesn't exist).
+- [ ] settings.json parses, and required keys are present.
+- [ ] Final report: exactly what you installed / skipped / found already
+      present, anything DEGRADED and why, and every command you ran that
+      failed before you adapted.
+
+CONSTRAINTS: Do not install unrelated tools, modify unrelated dotfiles, or
+touch provider credentials. Stay scoped to this spec. When a choice is
+ambiguous, prefer the official docs of the tool in question over my repo's
+stale copies.
 ```
 
 ---
 
-## Quick reference (the essentials at a glance)
+## Why a prompt instead of a script
 
-| What | Where it goes |
-|------|---------------|
-| Skills | `~/.agents/skills` (clone of `harness-setup` repo) |
-| Theme | `~/.pi/agent/themes/rose-pine-moon.json` |
-| Installed extensions | `settings.json` → `packages` → `pi install <pkg>` |
-| Hook files | `~/.pi/agent/extensions/` (`herdr-agent-state.ts`, `update.ts`) |
-| Config | `~/.pi/agent/settings.json` |
+| Script (`setup.sh`) | LLM-driven prompt |
+|---------------------|-------------------|
+| Stale CLI flags break it silently | Agent verifies current docs before each command |
+| Can't recover from unexpected state | Diagnoses, adapts, reports |
+| Drifts from this repo's own philosophy (AGENTS.md mandates doc verification) | Enforces exactly that |
+| Deterministic — same input, same output | Non-deterministic — mitigated by the declarative spec + hard verification checklist |
 
-> If the repo is **private** and the target machine/user can't access it, the
-> skills can be re-provided by manually copying the skill folders instead of
-> cloning. Everything else follows the same steps.
+## Maintenance notes (for me, not the agent)
+
+- When you add a self-authored skill → add it to section 1B.
+- When a skill gains/changes an official source → update section 1A.
+- The verification section is the safety net — keep it strict.
+- Re-run this whole prompt on a new machine; it is idempotent by design.
