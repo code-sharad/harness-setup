@@ -1,36 +1,53 @@
 # My Skills
 
-A personal collection of agent skills (Claude Code / pi-Coding-Agent compatible) that I maintain and use.
+A personal collection of **self-authored** agent skills (Claude Code /
+pi-Coding-Agent compatible) plus a declarative, LLM-driven setup prompt.
 
-## Included skills
+**Third-party skills are intentionally NOT vendored here.** Copies rot — they
+are installed fresh from their official sources at setup time by the prompt in
+[`prompts/harness-setup.md`](prompts/harness-setup.md).
+
+## Setup
+
+Paste the prompt in [`prompts/harness-setup.md`](prompts/harness-setup.md)
+into any capable AI agent on the target machine. It will:
+
+1. Install the **latest** third-party skills from their official repos (below)
+2. Copy the self-authored skills from this repo
+3. Install the `rose-pine-moon` pi theme
+4. Install the pi extension packages and merge `settings.json`
+5. Run a verification checklist and report
+
+## Self-authored skills (live in this repo)
 
 | Skill | Description |
 |-------|-------------|
-| `agent-reach` | Research/search across 15+ internet platforms with multi-backend routing |
 | `deep-dive` | Turn long-form content into an interactive learning website |
 | `exa-research` | Deep web research: Exa search + Firecrawl extraction pipeline |
-| `find-skills` | Discover and install agent skills |
-| `firecrawl` | Web search / scrape / interact via the Firecrawl CLI |
-| `firecrawl-crawl` | Bulk-extract content from a site or docs section |
-| `firecrawl-interact` | Control a live browser session on a scraped page |
-| `firecrawl-map` | Discover and list all URLs on a website |
-| `firecrawl-scrape` | Extract clean markdown from any URL |
-| `firecrawl-search` | Web search with full page-content extraction |
-| `frontend-design` | Guidance for distinctive, intentional visual design |
-| `grill-me` | Interactive interrogation / feedback agent |
-| `teach` | Formats and workflow for teaching missions |
+| `tailor-resume` | Tailor a LaTeX resume + cover letter to any job description |
+
+## Third-party skills (installed from official sources, not copied here)
+
+| Skill | Official source |
+|-------|-----------------|
+| `agent-reach` | https://github.com/Panniantong/Agent-Reach |
+| `find-skills` | https://github.com/vercel-labs/skills |
+| `frontend-design` | https://github.com/anthropics/skills |
+| `grill-me` + `grilling` (dependency) | https://github.com/mattpocock/skills |
+| `teach` | https://github.com/mattpocock/skills |
+| `firecrawl`, `firecrawl-search`, `firecrawl-scrape`, `firecrawl-crawl`, `firecrawl-map`, `firecrawl-interact` | https://github.com/firecrawl/skills |
+
+> ⚠️ Some of these need credentials/tools on the target machine
+> (`FIRECRAWL_API_KEY`, the `agent-reach` CLI, Exa access). The setup prompt
+> reports these as DEGRADED rather than failing.
 
 ## Theme
 
-The `themes/` folder holds my custom pi-coding-agent theme(s), applied via
-`settings.json` (`"theme": "rose-pine-moon"`).
+- `themes/rose-pine-moon.json` — Rose Pine Moon palette
+  ([rose-pine.com](https://rose-pine.com)) packaged as a pi theme, applied via
+  `settings.json` (`"theme": "rose-pine-moon"`).
 
-- `themes/rose-pine-moon.json` — Rose Pine Moon palette for pi.
-
-## Extensions (install from name)
-
-The pi *extension packages* I have installed are listed in `~/.pi/agent/settings.json`
-under `packages`. Install them again with `pi install <package>`:
+## Extensions (installed by the setup prompt, not stored here)
 
 | Package | Type |
 |---------|------|
@@ -42,31 +59,21 @@ under `packages`. Install them again with `pi install <package>`:
 | `npm:@pi-archimedes/todo` | npm |
 | `git:github.com/nagisanzenin/engram` | git |
 
-Additional local extension hook files (kept in `~/.pi/agent/extensions/`) are tracked
-by name only, not by content:
-
-| Name | What it does |
-|------|--------------|
-| `herdr-agent-state` | Herdr ↔ pi integration state hooks (`herdr-agent-state.ts`)
-| `update` | Adds an in-app `/update` command to update pi and its extensions (`update.ts`) |
+Local extension hook files (`~/.pi/agent/extensions/`) are tracked by name
+only: `herdr-agent-state` (managed by Herdr) and `update` (in-app `/update`
+command).
 
 ## Layout
 
-Each skill lives in its own folder with a `SKILL.md` entry point, plus optional
-`references/`, `scripts/`, and `assets/` subfolders.
+Self-authored skills live in their own folders with a `SKILL.md` entry point,
+plus optional `references/`, `scripts/`, and `assets/` subfolders. Setup
+instructions live in `prompts/`.
 
-## Usage
+## Maintenance
 
-Point your agent framework at this directory so the skills are discoverable,
-then reference a skill by name when a task matches its description.
+- Added a self-authored skill → add it here and to section 1B of the setup prompt.
+- A third-party skill changed source/homepage → update the table above and
+  section 1A of the setup prompt.
+- The verification section of the setup prompt is the safety net — keep it strict.
 
-## Note
-
-Some skills (the `firecrawl*` family, `agent-reach`) are installed from
-third-party projects and may carry their own licenses or API-key requirements.
 This is a personal config repository.
-
-## One-shot setup prompt
-
-Paste the prompt in [`prompts/harness-setup.md`](prompts/harness-setup.md) into any
-AI harness to set up your environment.
